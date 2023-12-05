@@ -27,33 +27,34 @@ const processLines = function (lines) {
         // split line by tabs
         const data = line.split('\t');
 
-        // continue if no game ID exists
-        if (data[1] == '') {
-            return;
-        }
-
-        // map team description
-        Object.entries(mappings).forEach(([key, value]) => {
-            if (data[0] == key) {
-                data[0] = value;
-            }
-        });
-
-        // replace home or guest
-        if (data[4].search(/Sendenhorst/i) > 0) {
-            data[4] = data[0];
-        } else {
-            data[5] = data[0];
-        }
-
         // build game data
         const gameData = {
             'team': data[0],
+            'id': data[1],
             'date': data[2],
             'home': data[4],
             'guest': data[5],
             'result': data[6]
         };
+
+        // continue if no game ID exists
+        if (gameData.id == undefined || gameData.id == '') {
+            return;
+        }
+
+        // map team description
+        Object.entries(mappings).forEach(([key, value]) => {
+            if (gameData.team == key) {
+                gameData.team = value;
+            }
+        });
+
+        // replace home or guest
+        if (gameData.home.search(/Sendenhorst/i) > 0) {
+            gameData.home = gameData.team;
+        } else {
+            gameData.guest = gameData.team;
+        }
 
         // build game string
         let game = '';
@@ -67,10 +68,6 @@ const processLines = function (lines) {
     });
 
     return games;
-}
-
-const buildOutputText = function (games) {
-
 }
 
 processBtn.addEventListener('click', function (event) {
