@@ -22,6 +22,36 @@ const mappings = {
 const asHtmlList = () => htmlListElem.checked;
 const emptyOutput = () => outputElem.value = '';
 const showOutput = (output) => outputElem.value = output;
+const buildGameDataObject = function (gameData) {
+    return {
+        'team': gameData[0],
+        'id': gameData[1],
+        'date': gameData[2],
+        'home': gameData[4],
+        'guest': gameData[5],
+        'result': gameData[6]
+    };
+}
+const mapTeamDescription = function (gameData) {
+    let teamDescription = '';
+    Object.entries(mappings).forEach(([key, value]) => {
+        if (gameData.team == key) {
+            teamDescription = value;
+        }
+    });
+
+    return teamDescription;
+}
+const buildGameString = function (gameData) {
+    let game = '';
+    if (gameData.result == ':') {
+        game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}`;
+    } else {
+        game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
+    }
+
+    return game;
+}
 const processLines = function (lines) {
     const games = [];
 
@@ -29,42 +59,23 @@ const processLines = function (lines) {
         // split line by tabs
         const data = line.split('\t');
 
-        // build game data
-        const gameData = {
-            'team': data[0],
-            'id': data[1],
-            'date': data[2],
-            'home': data[4],
-            'guest': data[5],
-            'result': data[6]
-        };
+        const gameData = buildGameDataObject(data);
 
-        // continue if no game ID exists
+        // skip if no game ID exists
         if (gameData.id == undefined || gameData.id == '') {
             return;
         }
 
-        // map team description
-        Object.entries(mappings).forEach(([key, value]) => {
-            if (gameData.team == key) {
-                gameData.team = value;
-            }
-        });
+        gameData.team = mapTeamDescription(gameData);
 
-        // replace home or guest
+        // replace home or guest with team description
         if (gameData.home.search(/Sendenhorst/i) > 0) {
             gameData.home = gameData.team;
         } else {
             gameData.guest = gameData.team;
         }
 
-        // build game string
-        let game = '';
-        if (gameData.result == ':') {
-            game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}`;
-        } else {
-            game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
-        }
+        const game = buildGameString(gameData);
 
         games.push(game);
     });
