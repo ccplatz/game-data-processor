@@ -32,6 +32,7 @@ const buildGameDataObject = function (gameData) {
         'result': gameData[6]
     };
 }
+
 const mapTeamDescription = function (gameData) {
     let teamDescription = '';
     Object.entries(mappings).forEach(([key, value]) => {
@@ -42,9 +43,10 @@ const mapTeamDescription = function (gameData) {
 
     return teamDescription;
 }
+
 const buildGameString = function (gameData) {
     let game = '';
-    if (gameData.result == ':') {
+    if (gameData.result === ':') {
         game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}`;
     } else {
         game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
@@ -52,6 +54,7 @@ const buildGameString = function (gameData) {
 
     return game;
 }
+
 const processLines = function (lines) {
     const games = [];
 
@@ -62,14 +65,14 @@ const processLines = function (lines) {
         const gameData = buildGameDataObject(data);
 
         // skip if no game ID exists
-        if (gameData.id == undefined || gameData.id == '') {
+        if (!gameData.id) {
             return;
         }
 
         gameData.team = mapTeamDescription(gameData);
 
         // replace home or guest with team description
-        if (gameData.home.search(/Sendenhorst/i) > 0) {
+        if (gameData.home.search(/Sendenhorst/i) > -1) {
             gameData.home = gameData.team;
         } else {
             gameData.guest = gameData.team;
@@ -82,6 +85,7 @@ const processLines = function (lines) {
 
     return games;
 }
+
 const getListFromGames = function (games) {
     let htmlText = "<ul>";
     games.forEach((game) => htmlText += `<li>${game}</li>`);
@@ -95,12 +99,6 @@ processBtn.addEventListener('click', function (event) {
     const inputText = inputElem.value;
     const linesArr = inputText.split('\n');
     const games = processLines(linesArr);
-    let outputText = '';
-    if (asHtmlList()) {
-        outputText = getListFromGames(games);
-    } else {
-        outputText = games.join('\n');
-    }
-
+    let outputText = asHtmlList() ? getListFromGames(games) : games.join('\n');
     showOutput(outputText);
 })
