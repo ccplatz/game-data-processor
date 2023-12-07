@@ -15,9 +15,18 @@
     <p>Process data from a "Handball4all" game overview</p>
     <textarea name="input" id="input" cols="120" rows="20"></textarea>
     <div class="processAction">
+        <h3>Options</h3>
+        <ul>
+            <li>
+                <label for="htmlList">Output as unordered HTML list</label>
+                <input type="checkbox" name="htmlList" id="htmlList">
+            </li>
+            <li>
+                <label for="devideHomeAndAway">Devide home and away games</label>
+                <input type="checkbox" name="devideHomeAndAway" id="devideHomeAndAway">
+            </li>
+        </ul>
         <button type="submit" id="processBtn">Process</button>
-        <label for="htmlList">Output as unordered HTML list</label>
-        <input type="checkbox" name="htmlList" id="htmlList">
     </div>
     <textarea name="output" id="output" cols="120" rows="20" readonly></textarea>
 </body>

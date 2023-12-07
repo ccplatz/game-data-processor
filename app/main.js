@@ -4,6 +4,7 @@ const processBtn = document.getElementById('processBtn');
 const outputElem = document.getElementById('output');
 const inputElem = document.getElementById('input');
 const htmlListElem = document.getElementById('htmlList');
+const devideHomeAndAwayElem = document.getElementById('devideHomeAndAway');
 const mappings = {
     'M-ML': '1. Herren',
     'F-KK-1': '1. Damen',
@@ -20,6 +21,7 @@ const mappings = {
 };
 
 const asHtmlList = () => htmlListElem.checked;
+const devideHomeAndAway = () => devideHomeAndAwayElem.checked;
 const emptyOutput = () => outputElem.value = '';
 const showOutput = (output) => outputElem.value = output;
 const buildGameDataObject = function (gameData) {
@@ -56,7 +58,9 @@ const buildGameString = function (gameData) {
 }
 
 const processLines = function (lines) {
-    const games = [];
+    const homeGames = [];
+    const awayGames = [];
+    const allGames = [];
 
     lines.forEach(line => {
         // split line by tabs
@@ -73,24 +77,68 @@ const processLines = function (lines) {
         gameData.date = gameData.date.replace('h', '')
 
         // replace home or guest with team description
+        // flag as home or away game
         if (gameData.home.search(/Sendenhorst/i) > -1) {
             gameData.home = gameData.team;
+            gameData.type = 'home';
         } else {
             gameData.guest = gameData.team;
+            gameData.type = 'away';
         }
 
         const game = buildGameString(gameData);
 
-        games.push(game);
+        if (gameData.type === 'home') {
+            homeGames.push(game);
+        } else {
+            awayGames.push(game);
+        }
+        allGames.push(game);
     });
+
+    const games = [homeGames, awayGames, allGames];
 
     return games;
 }
 
 const getListFromGames = function (games) {
-    let htmlText = "<ul>";
+    let htmlText = '<ul>';
     games.forEach((game) => htmlText += `<li>${game}</li>`);
-    htmlText += "</ul>";
+    htmlText += '</ul>';
+
+    return htmlText;
+}
+
+const getTextFromGames = function (homeGames, awayGames, allGames) {
+    let text = '';
+
+    if (devideHomeAndAway()) {
+        text = 'Heimspiele:\n';
+        text += homeGames.join('\n') + '\n\n';
+        text += 'Auswärtsspiele:\n';
+        text += awayGames.join('\n');
+
+        return text;
+    }
+
+    text = allGames.join('\n');
+
+    return text;
+}
+
+const getHtmlOutput = function (homeGames, awayGames, allGames) {
+    let htmlText = '';
+
+    if (devideHomeAndAway()) {
+        htmlText = 'Heimspiele:\n';
+        htmlText += getListFromGames(homeGames) + '\n\n';
+        htmlText += 'Auswärtsspiele:\n';
+        htmlText += getListFromGames(awayGames) + '\n';
+
+        return htmlText;
+    }
+
+    htmlText = getListFromGames(allGames);
 
     return htmlText;
 }
@@ -100,6 +148,6 @@ processBtn.addEventListener('click', function (event) {
     const inputText = inputElem.value;
     const linesArr = inputText.split('\n');
     const games = processLines(linesArr);
-    let outputText = asHtmlList() ? getListFromGames(games) : games.join('\n');
+    let outputText = asHtmlList() ? getHtmlOutput(...games) : getTextFromGames(...games);
     showOutput(outputText);
 })
