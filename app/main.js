@@ -9,14 +9,14 @@ const mappings = {
     'M-ML': '1. Herren',
     'F-KK-1': '1. Damen',
     'M-2KK-1': '2. Herren',
-    'wA-MK': 'weibliche A-Jugend',
-    'wC-MK2': 'weibliche C-Jugend',
-    'wD-ML2': 'weibliche D-Jugend',
-    'wE-ML4': 'weibliche E-Jugend',
-    'mA ML VR': 'männliche A-Jugend',
-    'mC-MK2': 'männliche C-Jugend',
-    'mD-MK3': 'männliche D-Jugend',
-    'mE-ML4': 'männliche E-Jugend',
+    'wA-MK': 'Weibliche A-Jugend',
+    'wC-MK2': 'Weibliche C-Jugend',
+    'wD-ML2': 'Weibliche D-Jugend',
+    'wE-ML4': 'Weibliche E-Jugend',
+    'mA ML VR': 'Männliche A-Jugend',
+    'mC-MK2': 'Männliche C-Jugend',
+    'mD-MK3': 'Männliche D-Jugend',
+    'mE-ML4': 'Männliche E-Jugend',
     'F-Freu': 'Freundschaftsspiele Damen',
 };
 
@@ -79,10 +79,10 @@ const processLines = function (lines) {
         // replace home or guest with team description
         // flag as home or away game
         if (gameData.home.search(/Sendenhorst/i) > -1) {
-            gameData.home = gameData.team;
+            gameData.home = 'SGS';
             gameData.type = 'home';
         } else {
-            gameData.guest = gameData.team;
+            gameData.guest = 'SGS';
             gameData.type = 'away';
         }
 
