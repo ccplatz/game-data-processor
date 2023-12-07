@@ -70,6 +70,7 @@ const processLines = function (lines) {
         }
 
         gameData.team = mapTeamDescription(gameData);
+        gameData.date = gameData.date.replace('h', '')
 
         // replace home or guest with team description
         if (gameData.home.search(/Sendenhorst/i) > -1) {
