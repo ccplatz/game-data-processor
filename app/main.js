@@ -3,6 +3,7 @@
 const processBtn = document.getElementById('processBtn');
 const outputElem = document.getElementById('output');
 const inputElem = document.getElementById('input');
+const htmlListElem = document.getElementById('htmlList');
 const mappings = {
     'M-ML': '1. Herren',
     'F-KK-1': '1. Damen',
@@ -18,6 +19,7 @@ const mappings = {
     'F-Freu': 'Freundschaftsspiele Damen',
 };
 
+const asHtmlList = () => htmlListElem.checked;
 const emptyOutput = () => outputElem.value = '';
 const showOutput = (output) => outputElem.value = output;
 const processLines = function (lines) {
@@ -69,13 +71,25 @@ const processLines = function (lines) {
 
     return games;
 }
+const getListFromGames = function (games) {
+    let htmlText = "<ul>";
+    games.forEach((game) => htmlText += `<li>${game}</li>`);
+    htmlText += "</ul>";
+
+    return htmlText;
+}
 
 processBtn.addEventListener('click', function (event) {
     emptyOutput();
     const inputText = inputElem.value;
     const linesArr = inputText.split('\n');
     const games = processLines(linesArr);
-    const outputText = games.join('\n');
+    let outputText = '';
+    if (asHtmlList()) {
+        outputText = getListFromGames(games);
+    } else {
+        outputText = games.join('\n');
+    }
 
     showOutput(outputText);
 })
