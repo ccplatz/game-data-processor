@@ -22,18 +22,18 @@ const mappings = {
 
 const asHtmlList = () => htmlListElem.checked;
 const devideHomeAndAway = () => devideHomeAndAwayElem.checked;
-const emptyOutput = () => outputElem.value = '';
-const showOutput = (output) => outputElem.value = output;
+const emptyOutput = () => (outputElem.value = '');
+const showOutput = (output) => (outputElem.value = output);
 const buildGameDataObject = function (gameData) {
     return {
-        'team': gameData[0],
-        'id': gameData[1],
-        'date': gameData[2],
-        'home': gameData[4],
-        'guest': gameData[5],
-        'result': gameData[6]
+        team: gameData[0],
+        id: gameData[1],
+        date: gameData[2],
+        home: gameData[4],
+        guest: gameData[5],
+        result: gameData[6],
     };
-}
+};
 
 const mapTeamDescription = function (gameData) {
     let teamDescription = '';
@@ -44,7 +44,7 @@ const mapTeamDescription = function (gameData) {
     });
 
     return teamDescription;
-}
+};
 
 const buildGameString = function (gameData) {
     let game = '';
@@ -55,14 +55,14 @@ const buildGameString = function (gameData) {
     }
 
     return game;
-}
+};
 
 const processLines = function (lines) {
     const homeGames = [];
     const awayGames = [];
     const allGames = [];
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
         // split line by tabs
         const data = line.split('\t');
 
@@ -74,7 +74,7 @@ const processLines = function (lines) {
         }
 
         gameData.team = mapTeamDescription(gameData);
-        gameData.date = gameData.date.replace('h', '')
+        gameData.date = gameData.date.replace('h', '');
 
         // replace home or guest with team description
         // flag as home or away game
@@ -99,15 +99,15 @@ const processLines = function (lines) {
     const games = [homeGames, awayGames, allGames];
 
     return games;
-}
+};
 
 const getListFromGames = function (games) {
     let htmlText = '<ul>';
-    games.forEach((game) => htmlText += `<li>${game}</li>`);
+    games.forEach((game) => (htmlText += `<li>${game}</li>`));
     htmlText += '</ul>';
 
     return htmlText;
-}
+};
 
 const getTextFromGames = function (homeGames, awayGames, allGames) {
     let text = '';
@@ -124,7 +124,7 @@ const getTextFromGames = function (homeGames, awayGames, allGames) {
     text = allGames.join('\n');
 
     return text;
-}
+};
 
 const getHtmlOutput = function (homeGames, awayGames, allGames) {
     let htmlText = '';
@@ -141,13 +141,15 @@ const getHtmlOutput = function (homeGames, awayGames, allGames) {
     htmlText = getListFromGames(allGames);
 
     return htmlText;
-}
+};
 
 processBtn.addEventListener('click', function (event) {
     emptyOutput();
     const inputText = inputElem.value;
     const linesArr = inputText.split('\n');
     const games = processLines(linesArr);
-    let outputText = asHtmlList() ? getHtmlOutput(...games) : getTextFromGames(...games);
+    let outputText = asHtmlList()
+        ? getHtmlOutput(...games)
+        : getTextFromGames(...games);
     showOutput(outputText);
-})
+});

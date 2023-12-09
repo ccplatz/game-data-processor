@@ -1,34 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Game data processor</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="main.js" defer></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Game data processor</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="main.js" defer></script>
-</head>
-
-<body>
-    <h1>Game data processor</h1>
-    <p>Process data from a "Handball4all" game overview</p>
-    <textarea name="input" id="input" cols="120" rows="20"></textarea>
-    <div class="processAction">
-        <h3>Options</h3>
-        <ul>
-            <li>
-                <label for="htmlList">Output as unordered HTML list</label>
-                <input type="checkbox" name="htmlList" id="htmlList">
-            </li>
-            <li>
-                <label for="devideHomeAndAway">Devide home and away games</label>
-                <input type="checkbox" name="devideHomeAndAway" id="devideHomeAndAway">
-            </li>
-        </ul>
-        <button type="submit" id="processBtn">Process</button>
-    </div>
-    <textarea name="output" id="output" cols="120" rows="20" readonly></textarea>
-</body>
-
+    <body>
+        <h1>Game data processor</h1>
+        <p>Process data from a "Handball4all" game overview</p>
+        <textarea name="input" id="input" cols="120" rows="20"></textarea>
+        <div class="processAction">
+            <h3>Options</h3>
+            <ul>
+                <li>
+                    <label for="htmlList">Output as unordered HTML list</label>
+                    <input type="checkbox" name="htmlList" id="htmlList" />
+                </li>
+                <li>
+                    <label for="devideHomeAndAway">
+                        Devide home and away games
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="devideHomeAndAway"
+                        id="devideHomeAndAway"
+                    />
+                </li>
+            </ul>
+            <button type="submit" id="processBtn">Process</button>
+        </div>
+        <textarea
+            name="output"
+            id="output"
+            cols="120"
+            rows="20"
+            readonly
+        ></textarea>
+    </body>
 </html>
