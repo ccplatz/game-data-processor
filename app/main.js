@@ -54,7 +54,7 @@ const buildGameString = function (gameData) {
     if (gameData.result === ':') {
         game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}`;
     } else {
-        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
+        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}, ${gameData.result}`;
     }
 
     return game;
