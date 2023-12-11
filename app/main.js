@@ -28,7 +28,7 @@ const emptyOutput = () => (outputElem.value = '');
 const showOutput = (output) => (outputElem.value = output);
 const buildGameDataObject = function (gameData) {
     return {
-        team: gameData[0],
+        team: gameData[0].trim(),
         id: gameData[1],
         date: gameData[2],
         home: gameData[4],
@@ -54,10 +54,16 @@ const getDateFromString = function (dateString) {
     const [day, month, yearShort] = datePart.split('.');
     const year = '20' + yearShort;
     const [hour, minute] = time.split(':');
-    const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
+    const parsedDate = new Date(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+        parseInt(hour),
+        parseInt(minute)
+    );
 
     return parsedDate;
-}
+};
 
 const getFormattedDateString = function (dateObject) {
     return new Intl.DateTimeFormat('de-DE', {
@@ -67,7 +73,7 @@ const getFormattedDateString = function (dateObject) {
         hour: '2-digit',
         minute: '2-digit',
     }).format(dateObject);
-}
+};
 
 const buildGameString = function (gameData) {
     let game = '';
