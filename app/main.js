@@ -5,6 +5,7 @@ const outputElem = document.getElementById('output');
 const inputElem = document.getElementById('input');
 const htmlListElem = document.getElementById('htmlList');
 const devideHomeAndAwayElem = document.getElementById('devideHomeAndAway');
+const showDateElem = document.getElementById('showDates');
 const mappings = {
     'M-ML': '1. Herren',
     'F-KK-1': '1. Damen',
@@ -21,6 +22,7 @@ const mappings = {
 };
 
 const asHtmlList = () => htmlListElem.checked;
+const withDate = () => showDateElem.checked;
 const devideHomeAndAway = () => devideHomeAndAwayElem.checked;
 const emptyOutput = () => (outputElem.value = '');
 const showOutput = (output) => (outputElem.value = output);
@@ -48,10 +50,11 @@ const mapTeamDescription = function (gameData) {
 
 const buildGameString = function (gameData) {
     let game = '';
+    const date = withDate() ? gameData.date + ', ' : '';
     if (gameData.result === ':') {
-        game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}`;
+        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}`;
     } else {
-        game = `${gameData.team}: ${gameData.date}, ${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
+        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}, Ergebnis: ${gameData.result}`;
     }
 
     return game;
