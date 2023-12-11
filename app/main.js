@@ -48,9 +48,30 @@ const mapTeamDescription = function (gameData) {
     return teamDescription;
 };
 
+const getDateFromString = function (dateString) {
+    dateString = dateString.replace('h', '');
+    const [, datePart, time] = dateString.split(', ');
+    const [day, month, yearShort] = datePart.split('.');
+    const year = '20' + yearShort;
+    const [hour, minute] = time.split(':');
+    const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
+
+    return parsedDate;
+}
+
+const getFormattedDateString = function (dateObject) {
+    return new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(dateObject);
+}
+
 const buildGameString = function (gameData) {
     let game = '';
-    const date = withDate() ? gameData.date + ', ' : '';
+    const date = withDate() ? getFormattedDateString(gameData.date) + ', ' : '';
     if (gameData.result === ':') {
         game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}`;
     } else {
@@ -77,7 +98,7 @@ const processLines = function (lines) {
         }
 
         gameData.team = mapTeamDescription(gameData);
-        gameData.date = gameData.date.replace('h', '');
+        gameData.date = getDateFromString(gameData.date);
 
         // replace home or guest with team description
         // flag as home or away game
