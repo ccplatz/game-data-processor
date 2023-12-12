@@ -26,6 +26,7 @@ const withDate = () => showDateElem.checked;
 const devideHomeAndAway = () => devideHomeAndAwayElem.checked;
 const emptyOutput = () => (outputElem.value = '');
 const showOutput = (output) => (outputElem.value = output);
+
 const buildGameDataObject = function (gameData) {
     return {
         team: gameData[0].trim(),
@@ -87,25 +88,36 @@ const buildGameString = function (gameDataObject) {
     return game;
 };
 
-const processLines = function (lines) {
+const processLines = function (linesArr) {
     const homeGames = [];
     const awayGames = [];
     const allGames = [];
 
-    lines.forEach((line) => {
-        // split line by tabs
-        const data = line.split('\t');
+    let linesSplittedByTab = linesArr.map(line => line.split('\t'));
 
-        const gameDataObject = buildGameDataObject(data);
+    // Skip if no game ID exists
+    linesSplittedByTab = linesSplittedByTab.filter((line) => {
+        return line[1];
+    });
 
-        // skip if no game ID exists
-        if (!gameDataObject.id) {
-            return;
+    // Copy team description from previous line if team has more than one game per week
+    const preparedLines = [];
+    linesSplittedByTab.forEach((line, key) => {
+        if (line.length < 8 && !(line[0] in mappings)) {
+            line.unshift(linesSplittedByTab[key - 1][0]);
         }
+        preparedLines.push(line);
+    });
 
+    preparedLines.forEach((line) => {
+        const gameDataObject = buildGameDataObject(line);
+
+        if (gameDataObject.team === '') {
+            gameDataObject.team = allGames[allGames.length - 1].team;
+            console.log(gameDataObject.team);
+
+        }
         gameDataObject.team = mapTeamDescription(gameDataObject);
-        console.log(gameDataObject);
-
         gameDataObject.date = getDateFromString(gameDataObject.date);
 
         // replace home or guest with team description
