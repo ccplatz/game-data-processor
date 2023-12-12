@@ -37,10 +37,10 @@ const buildGameDataObject = function (gameData) {
     };
 };
 
-const mapTeamDescription = function (gameData) {
+const mapTeamDescription = function (gameDataObject) {
     let teamDescription = '';
     Object.entries(mappings).forEach(([key, value]) => {
-        if (gameData.team == key) {
+        if (gameDataObject.team == key) {
             teamDescription = value;
         }
     });
@@ -75,13 +75,13 @@ const getFormattedDateString = function (dateObject) {
     }).format(dateObject);
 };
 
-const buildGameString = function (gameData) {
+const buildGameString = function (gameDataObject) {
     let game = '';
-    const date = withDate() ? getFormattedDateString(gameData.date) + ', ' : '';
-    if (gameData.result === ':') {
-        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}`;
+    const date = withDate() ? getFormattedDateString(gameDataObject.date) + ', ' : '';
+    if (gameDataObject.result === ':') {
+        game = `${gameDataObject.team}: ${date}${gameDataObject.home} gg. ${gameDataObject.guest}`;
     } else {
-        game = `${gameData.team}: ${date}${gameData.home} gg. ${gameData.guest}, ${gameData.result}`;
+        game = `${gameDataObject.team}: ${date}${gameDataObject.home} gg. ${gameDataObject.guest}, ${gameDataObject.result}`;
     }
 
     return game;
@@ -96,29 +96,31 @@ const processLines = function (lines) {
         // split line by tabs
         const data = line.split('\t');
 
-        const gameData = buildGameDataObject(data);
+        const gameDataObject = buildGameDataObject(data);
 
         // skip if no game ID exists
-        if (!gameData.id) {
+        if (!gameDataObject.id) {
             return;
         }
 
-        gameData.team = mapTeamDescription(gameData);
-        gameData.date = getDateFromString(gameData.date);
+        gameDataObject.team = mapTeamDescription(gameDataObject);
+        console.log(gameDataObject);
+
+        gameDataObject.date = getDateFromString(gameDataObject.date);
 
         // replace home or guest with team description
         // flag as home or away game
-        if (gameData.home.search(/Sendenhorst/i) > -1) {
-            gameData.home = 'SGS';
-            gameData.type = 'home';
+        if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
+            gameDataObject.home = 'SGS';
+            gameDataObject.type = 'home';
         } else {
-            gameData.guest = 'SGS';
-            gameData.type = 'away';
+            gameDataObject.guest = 'SGS';
+            gameDataObject.type = 'away';
         }
 
-        const game = buildGameString(gameData);
+        const game = buildGameString(gameDataObject);
 
-        if (gameData.type === 'home') {
+        if (gameDataObject.type === 'home') {
             homeGames.push(game);
         } else {
             awayGames.push(game);
