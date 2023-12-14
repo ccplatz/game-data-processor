@@ -130,19 +130,19 @@ const processLines = function (linesArr) {
             gameDataObject.type = 'away';
         }
 
-        const game = buildGameString(gameDataObject);
-
         if (gameDataObject.type === 'home') {
-            homeGames.push(game);
+            homeGames.push(gameDataObject);
         } else {
-            awayGames.push(game);
+            awayGames.push(gameDataObject);
         }
-        allGames.push(game);
+        allGames.push(gameDataObject);
     });
 
-    const games = [homeGames, awayGames, allGames];
+    const processedGames = [homeGames, awayGames, allGames].map(
+        gameArr => gameArr.sort((a, b) => a.date - b.date).map(buildGameString)
+    );
 
-    return games;
+    return processedGames;
 };
 
 const getListFromGames = function (games) {
