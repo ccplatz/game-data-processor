@@ -88,47 +88,53 @@ const buildGameString = function (gameDataObject) {
     return game;
 };
 
+const setTeamDescriptions = function (gameDataArr) {
+    gameDataArr.map((line, key) => {
+        if (line.length < 8 && !(line[0] in mappings)) {
+            line.unshift(gameDataArr[key - 1][0]);
+        }
+    });
+    return gameDataArr;
+}
+
+const setGameType = function (gameDataObject) {
+    if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
+        gameDataObject.type = 'home';
+    } else {
+        gameDataObject.type = 'away';
+    }
+}
+
+const setHomeAndGuest = function (gameDataObject) {
+    if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
+        gameDataObject.home = 'SGS';
+    } else {
+        gameDataObject.guest = 'SGS';
+    }
+}
+
 const processLines = function (linesArr) {
     const homeGames = [];
     const awayGames = [];
     const allGames = [];
 
-    let linesSplittedByTab = linesArr.map(line => line.split('\t'));
+    let gameDataArr = linesArr.map(line => line.split('\t'));
 
     // Skip if no game ID exists
-    linesSplittedByTab = linesSplittedByTab.filter((line) => {
+    gameDataArr = gameDataArr.filter((line) => {
         return line[1];
     });
 
     // Copy team description from previous line if team has more than one game per week
-    const preparedLines = [];
-    linesSplittedByTab.forEach((line, key) => {
-        if (line.length < 8 && !(line[0] in mappings)) {
-            line.unshift(linesSplittedByTab[key - 1][0]);
-        }
-        preparedLines.push(line);
-    });
+    gameDataArr = setTeamDescriptions(gameDataArr);
 
-    preparedLines.forEach((line) => {
+    gameDataArr.forEach((line) => {
         const gameDataObject = buildGameDataObject(line);
 
-        if (gameDataObject.team === '') {
-            gameDataObject.team = allGames[allGames.length - 1].team;
-            console.log(gameDataObject.team);
-
-        }
         gameDataObject.team = mapTeamDescription(gameDataObject);
         gameDataObject.date = getDateFromString(gameDataObject.date);
-
-        // replace home or guest with team description
-        // flag as home or away game
-        if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
-            gameDataObject.home = 'SGS';
-            gameDataObject.type = 'home';
-        } else {
-            gameDataObject.guest = 'SGS';
-            gameDataObject.type = 'away';
-        }
+        setGameType(gameDataObject);
+        setHomeAndGuest(gameDataObject)
 
         if (gameDataObject.type === 'home') {
             homeGames.push(gameDataObject);
