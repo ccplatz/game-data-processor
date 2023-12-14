@@ -160,10 +160,10 @@ const getListFromGames = function (games) {
 };
 
 const getTextFromGames = function (homeGames, awayGames, allGames) {
-    let text = '';
+    let text = 'Hier die Übersicht der Spiele:\n\n';
 
     if (devideHomeAndAway()) {
-        text = 'Heimspiele:\n';
+        text += 'Heimspiele:\n';
         text += homeGames.join('\n') + '\n\n';
         text += 'Auswärtsspiele:\n';
         text += awayGames.join('\n');
@@ -177,11 +177,11 @@ const getTextFromGames = function (homeGames, awayGames, allGames) {
 };
 
 const getHtmlOutput = function (homeGames, awayGames, allGames) {
-    let htmlText = '';
+    let htmlText = '<strong>Hier die Übersicht der Spiele:</strong>\n\n';
 
     if (devideHomeAndAway()) {
-        htmlText = 'Heimspiele:\n';
-        htmlText += getListFromGames(homeGames) + '\n\n';
+        htmlText += 'Heimspiele:\n';
+        htmlText += getListFromGames(homeGames) + '\n&nbsp;\n\n';
         htmlText += 'Auswärtsspiele:\n';
         htmlText += getListFromGames(awayGames) + '\n';
 
