@@ -78,7 +78,9 @@ const getFormattedDateString = function (dateObject) {
 
 const buildGameString = function (gameDataObject) {
     let game = '';
-    const date = withDate() ? getFormattedDateString(gameDataObject.date) + ', ' : '';
+    const date = withDate()
+        ? getFormattedDateString(gameDataObject.date) + ', '
+        : '';
     if (gameDataObject.result === ':') {
         game = `${gameDataObject.team}: ${date}${gameDataObject.home} gg. ${gameDataObject.guest}`;
     } else {
@@ -95,7 +97,7 @@ const setTeamDescriptions = function (gameDataArr) {
         }
     });
     return gameDataArr;
-}
+};
 
 const setGameType = function (gameDataObject) {
     if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
@@ -103,7 +105,7 @@ const setGameType = function (gameDataObject) {
     } else {
         gameDataObject.type = 'away';
     }
-}
+};
 
 const setHomeAndGuest = function (gameDataObject) {
     if (gameDataObject.home.search(/Sendenhorst/i) > -1) {
@@ -111,14 +113,14 @@ const setHomeAndGuest = function (gameDataObject) {
     } else {
         gameDataObject.guest = 'SGS';
     }
-}
+};
 
 const processLines = function (linesArr) {
     const homeGames = [];
     const awayGames = [];
     const allGames = [];
 
-    let gameDataArr = linesArr.map(line => line.split('\t'));
+    let gameDataArr = linesArr.map((line) => line.split('\t'));
 
     // Skip if no game ID exists
     gameDataArr = gameDataArr.filter((line) => {
@@ -134,7 +136,7 @@ const processLines = function (linesArr) {
         gameDataObject.team = mapTeamDescription(gameDataObject);
         gameDataObject.date = getDateFromString(gameDataObject.date);
         setGameType(gameDataObject);
-        setHomeAndGuest(gameDataObject)
+        setHomeAndGuest(gameDataObject);
 
         if (gameDataObject.type === 'home') {
             homeGames.push(gameDataObject);
@@ -144,8 +146,8 @@ const processLines = function (linesArr) {
         allGames.push(gameDataObject);
     });
 
-    const processedGames = [homeGames, awayGames, allGames].map(
-        gameArr => gameArr.sort((a, b) => a.date - b.date).map(buildGameString)
+    const processedGames = [homeGames, awayGames, allGames].map((gameArr) =>
+        gameArr.sort((a, b) => a.date - b.date).map(buildGameString)
     );
 
     return processedGames;
